@@ -1,0 +1,35 @@
+Table accounts as A {
+    id bigserial [pk]
+    owner varchar [not null]
+    balance numeric [not null]
+    currency varchar [not null]
+    created_at timestamptz [not null, default: `now()`]
+
+    Note: 'Stores Bank Account Data'
+}
+
+Table entries {
+    id bigserial [pk]
+    account_id bigint [ref: > A.id, not null]
+    amount numeric [not null, note: 'credit is +ve and debit is -ve']
+    created_at timestamptz [not null, default: `now()`]
+
+    Indexes {
+        account_id
+    }
+}
+
+Table transfers {
+    id bigserial [pk]
+    from_account_id bigint [ref: > A.id, not null]
+    to_account_id bigint [ref: > A.id, not null]
+    // dbml currently does not support check constraints
+    // check contraint to enforce +ve amount value to be added outside of dbml
+    amount numeric [not null, note: 'amount must be +ve value']
+
+    Indexes {
+        from_account_id
+        to_account_id
+        (from_account_id, to_account_id)
+    }
+}
