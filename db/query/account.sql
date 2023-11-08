@@ -17,6 +17,13 @@ SELECT * FROM accounts
 WHERE id = $1 LIMIT 1
 FOR NO KEY UPDATE;
 
+-- name: ListAccounts :many
+SELECT * FROM accounts
+WHERE owner = $1
+ORDER BY id
+LIMIT $2
+OFFSET $3;
+
 -- name: UpdateAccount :one
 UPDATE accounts
 SET balance = $2
