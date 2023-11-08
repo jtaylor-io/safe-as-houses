@@ -14,15 +14,19 @@ const (
 	dbSource = "postgresql://root:secret@localhost:5432/safe_as_houses?sslmode=disable"
 )
 
-var testQueries *Queries
+var (
+	testQueries *Queries
+	testDb      *sql.DB
+)
 
 func TestMain(m *testing.M) {
-	conn, err := sql.Open(dbDriver, dbSource)
+	var err error
+	testDb, err = sql.Open(dbDriver, dbSource)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
 
-	testQueries = New(conn)
+	testQueries = New(testDb)
 
 	os.Exit(m.Run())
 }
