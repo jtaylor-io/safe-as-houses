@@ -35,6 +35,11 @@ func TestTransferTx(t *testing.T) {
 		}()
 	}
 
+	var expectedAmounts []decimal.Decimal
+	for i := 0; i < n; i++ {
+		expectedAmounts = append(expectedAmounts, decimal.NewFromInt(int64(i+1)).Mul(amount))
+	}
+
 	// check results and errs
 	for i := 0; i < n; i++ {
 		err := <-errs
@@ -76,6 +81,37 @@ func TestTransferTx(t *testing.T) {
 		_, err = store.GetEntry(context.Background(), toEntry.ID)
 		require.NoError(t, err)
 
-		// TODO: check balanace
+		// check accounts
+		fromAccount := result.FromAccount
+		require.NotEmpty(t, fromAccount)
+		require.Equal(t, account1.ID, fromAccount.ID)
+
+		toAccount := result.ToAccount
+		require.NotEmpty(t, toAccount)
+		require.Equal(t, account2.ID, toAccount.ID)
+
+		// check balanace
+		diff1 := account1.Balance.Sub(fromAccount.Balance)
+		diff2 := toAccount.Balance.Sub(account2.Balance)
+		require.True(t, diff1.Equal(diff2))
+		require.True(t, expectedAmounts[i].Equal(diff1.Abs()))
+		require.True(t, diff1.GreaterThan(decimal.Zero))
 	}
+
+	// check the final updated balances
+	updatedAccount1, err := testQueries.GetAccount(context.Background(), account1.ID)
+	require.NoError(t, err)
+	updatedAccount2, err := testQueries.GetAccount(context.Background(), account2.ID)
+	require.NoError(t, err)
+
+	require.Equal(
+		t,
+		account1.Balance.Sub(amount.Mul(decimal.NewFromInt(int64(n)))),
+		updatedAccount1.Balance,
+	)
+	require.Equal(
+		t,
+		account2.Balance.Add(amount.Mul(decimal.NewFromInt(int64(n)))),
+		updatedAccount2.Balance,
+	)
 }
