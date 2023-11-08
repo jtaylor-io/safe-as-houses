@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+
+	"github.com/shopspring/decimal"
 )
 
 // Store provides db query and transaction capabilities
@@ -40,9 +42,9 @@ func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
 
 // TransferTxParams contains the input parameters of the transfer transaction
 type TransferTxParams struct {
-	FromAccountId int64  `json:"from_account_id"`
-	ToAccountId   int64  `json:"to_account_id"`
-	Amount        string `json:"amount"`
+	FromAccountId int64           `json:"from_account_id"`
+	ToAccountId   int64           `json:"to_account_id"`
+	Amount        decimal.Decimal `json:"amount"`
 }
 
 // TransferTxResult is the result of transfer tx
@@ -77,9 +79,7 @@ func (store *Store) TransferTx(
 
 		result.FromEntry, err = q.CreateEntry(ctx, CreateEntryParams{
 			AccountID: arg.FromAccountId,
-			// TODO: this is does not feel right!
-			// need to look at whethe numeric string type for pg can be replaced
-			Amount: "-" + arg.Amount,
+			Amount:    arg.Amount.Neg(),
 		})
 		if err != nil {
 			return err

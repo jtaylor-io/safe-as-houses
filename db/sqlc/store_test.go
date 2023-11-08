@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/require"
 )
 
@@ -15,7 +16,7 @@ func TestTransferTx(t *testing.T) {
 
 	// run n concurrent transfer transactions
 	n := 5
-	amount := "10"
+	amount := decimal.NewFromInt(10)
 
 	errs := make(chan error)
 
@@ -58,8 +59,7 @@ func TestTransferTx(t *testing.T) {
 		fromEntry := result.FromEntry
 		require.NotEmpty(t, fromEntry)
 		require.Equal(t, account1.ID, fromEntry.AccountID)
-		// TODO: can we do better than numeric string
-		require.Equal(t, "-"+amount, fromEntry.Amount)
+		require.Equal(t, amount.Neg(), fromEntry.Amount)
 		require.NotZero(t, fromEntry.ID)
 		require.NotZero(t, fromEntry.CreatedAt)
 

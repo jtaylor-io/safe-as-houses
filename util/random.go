@@ -1,10 +1,11 @@
 package util
 
 import (
-	"fmt"
 	"math/rand"
 	"strings"
 	"time"
+
+	"github.com/shopspring/decimal"
 )
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
@@ -36,9 +37,9 @@ func RandomOwner() string {
 	return RandomString(10)
 }
 
-// RandomMoney generates a random amount of money as a `numeric` string
-func RandomMoney() string {
-	return fmt.Sprint(RandomInt(0, 1000))
+// RandomMoney generates a random amount of money
+func RandomMoney() decimal.Decimal {
+	return decimal.NewFromFloat(rand.Float64() * 1000)
 }
 
 // RandomCurrency generates a random currency string
