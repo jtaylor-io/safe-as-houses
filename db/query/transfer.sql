@@ -17,6 +17,15 @@ SELECT * FROM transfers
 WHERE id = $1 LIMIT 1
 FOR NO KEY UPDATE;
 
+-- name: ListTransfers :many
+SELECT * FROM transfers
+WHERE 
+    from_account_id = $1 OR
+    to_account_id = $2
+ORDER BY id
+LIMIT $3
+OFFSET $4;
+
 -- name: DeleteTransfer :exec
 DELETE FROM transfers
 WHERE id = $1;
