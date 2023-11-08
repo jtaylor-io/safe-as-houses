@@ -14,20 +14,21 @@ jobs:
       # Label used to access the service container
       postgres:
         # Docker Hub image
-        image: postgres:16
+        image: postgres:16-alpine
         # Provide the password for postgres
         env:
           POSTGRES_USER: root
           POSTGRES_PASSWORD: secret
           POSTGRES_DB: safe_as_houses
-          # Set health checks to wait until postgres has started
-          options: >-
-            --health-cmd pg_isready
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 5
-          ports:
-            - 5432:5432
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v3
 
@@ -36,10 +37,10 @@ jobs:
         with:
           go-version: "1.20"
 
-      - name: Install golang-migrate cli tool
+      - name: Install golang-migrate
         run: |
-          curl -L https://github.com/golang-migrate/migrate/releases/download/$version/migrate.$os-$arch.tar.gz | tar xvz
-          mv migrate.linux-amd64 /usr/bin/migrate
+          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
+          sudo mv migrate /usr/bin/migrate
           which migrate
 
       - name: DB Migrations
