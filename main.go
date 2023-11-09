@@ -12,7 +12,8 @@ import (
 const (
 	dbDriver      = "postgres"
 	dbSource      = "postgresql://root:secret@localhost:5432/safe_as_houses?sslmode=disable"
-	serverAddress = "0.0.0.0:8080"
+	serverAddress = "localhost:8080"
+	// serverAddress = "0.0.0.0:8080"
 )
 
 func main() {
