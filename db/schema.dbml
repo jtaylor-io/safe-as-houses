@@ -6,6 +6,10 @@ Table accounts as A {
     created_at timestamptz [not null, default: `now()`]
 
     Note: 'Stores Bank Account Data'
+
+    Indexes {
+        owner
+    }
 }
 
 Table entries {
