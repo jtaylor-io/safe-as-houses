@@ -45,7 +45,7 @@ func RandomMoney() decimal.Decimal {
 // RandomCurrency generates a random currency string
 func RandomCurrency() string {
 	currencies := []string{
-		"HKD", "USD", "GBP",
+		GBP, HKD, USD,
 	}
 	n := len(currencies)
 	return currencies[rand.Intn(n)]
