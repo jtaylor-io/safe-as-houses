@@ -47,8 +47,8 @@ func (store *SQLStore) execTx(ctx context.Context, fn func(*Queries) error) erro
 
 // TransferTxParams contains the input parameters of the transfer transaction
 type TransferTxParams struct {
-	FromAccountId int64           `json:"from_account_id"`
-	ToAccountId   int64           `json:"to_account_id"`
+	FromAccountID int64           `json:"from_account_id"`
+	ToAccountID   int64           `json:"to_account_id"`
 	Amount        decimal.Decimal `json:"amount"`
 }
 
@@ -74,8 +74,8 @@ func (store *SQLStore) TransferTx(
 		var err error
 
 		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams{
-			FromAccountID: arg.FromAccountId,
-			ToAccountID:   arg.ToAccountId,
+			FromAccountID: arg.FromAccountID,
+			ToAccountID:   arg.ToAccountID,
 			Amount:        arg.Amount,
 		})
 		if err != nil {
@@ -83,7 +83,7 @@ func (store *SQLStore) TransferTx(
 		}
 
 		result.FromEntry, err = q.CreateEntry(ctx, CreateEntryParams{
-			AccountID: arg.FromAccountId,
+			AccountID: arg.FromAccountID,
 			Amount:    arg.Amount.Neg(),
 		})
 		if err != nil {
@@ -91,7 +91,7 @@ func (store *SQLStore) TransferTx(
 		}
 
 		result.ToEntry, err = q.CreateEntry(ctx, CreateEntryParams{
-			AccountID: arg.ToAccountId,
+			AccountID: arg.ToAccountID,
 			Amount:    arg.Amount,
 		})
 		if err != nil {
@@ -100,17 +100,17 @@ func (store *SQLStore) TransferTx(
 
 		// update accounts' balance
 
-		if arg.FromAccountId < arg.ToAccountId {
+		if arg.FromAccountID < arg.ToAccountID {
 			result.FromAccount, result.ToAccount, err = addMoney(
 				ctx,
 				q,
-				arg.FromAccountId,
+				arg.FromAccountID,
 				arg.Amount.Neg(),
-				arg.ToAccountId,
+				arg.ToAccountID,
 				arg.Amount,
 			)
 		} else {
-			result.FromAccount, result.ToAccount, err = addMoney(ctx, q, arg.ToAccountId, arg.Amount, arg.FromAccountId, arg.Amount.Neg())
+			result.FromAccount, result.ToAccount, err = addMoney(ctx, q, arg.ToAccountID, arg.Amount, arg.FromAccountID, arg.Amount.Neg())
 		}
 
 		return nil
