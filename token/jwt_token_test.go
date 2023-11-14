@@ -33,6 +33,20 @@ func TestJWTMaker(t *testing.T) {
 	require.WithinDuration(t, expiredAt, payload.ExpiredAt, time.Second)
 }
 
+func TestExpiredJWTToken(t *testing.T) {
+	maker, err := NewJWTMaker(util.RandomString(32))
+	require.NoError(t, err)
+
+	token, err := maker.CreateToken(util.RandomOwner(), -time.Minute)
+	require.NoError(t, err)
+	require.NotEmpty(t, token)
+
+	payload, err := maker.VerifyToken(token)
+	require.Error(t, err)
+	require.EqualError(t, err, ErrExpiredToken.Error())
+	require.Nil(t, payload)
+}
+
 func TestInvalidJWTTokenAlgNone(t *testing.T) {
 	payload, err := NewPayload(util.RandomOwner(), time.Minute)
 	require.NoError(t, err)
