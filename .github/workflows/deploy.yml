@@ -28,6 +28,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Load secrets and save in app.env
+        # multi-line cmd
         run: >
           aws secretsmanager get-secret-value 
           --secret-id safe-as-houses 
