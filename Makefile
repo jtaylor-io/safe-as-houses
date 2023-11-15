@@ -1,11 +1,11 @@
 postgres: 
-	docker run --name postgres16 --network bank-network -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:16-alpine
+	docker run --name postgres15 --network bank-network -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:15-alpine
 
 createdb:
-	docker exec -it postgres16 createdb --username=root --owner=root safe_as_houses
+	docker exec -it postgres15 createdb --username=root --owner=root safe_as_houses
 
 dropdb:
-	docker exec -it postgres16 dropdb safe_as_houses
+	docker exec -it postgres15 dropdb safe_as_houses
 
 migrateup:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/safe_as_houses?sslmode=disable" -verbose up
