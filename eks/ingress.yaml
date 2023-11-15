@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: nginx
+spec:
+  controller: k8s.io/ingress-nginx
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: safe-as-houses-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "safe-as-houses.jtaylor.io"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: safe-as-houses-api-service
+                port:
+                  number: 80
