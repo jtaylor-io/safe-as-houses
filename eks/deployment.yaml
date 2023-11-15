@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: safe-as-houses-api-deployment
+  labels:
+    app: safe-as-houses-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: safe-as-houses-api
+  template:
+    metadata:
+      labels:
+        app: safe-as-houses-api
+    spec:
+      containers:
+        - name: safe-as-houses-api
+          image: 426038099359.dkr.ecr.eu-west-2.amazonaws.com/safe-as-houses:9d1529f6a13e58a09daa7f55b036462012a370c2
+          ports:
+            - containerPort: 8080
