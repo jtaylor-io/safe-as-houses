@@ -16,6 +16,7 @@ spec:
     spec:
       containers:
         - name: safe-as-houses-api
-          image: 426038099359.dkr.ecr.eu-west-2.amazonaws.com/safe-as-houses:9d1529f6a13e58a09daa7f55b036462012a370c2
+          image: 426038099359.dkr.ecr.eu-west-2.amazonaws.com/safe-as-houses:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
