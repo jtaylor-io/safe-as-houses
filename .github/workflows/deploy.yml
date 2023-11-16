@@ -52,6 +52,10 @@ jobs:
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -t latest .
           docker push -a $REGISTRY/$REPOSITORY
 
+      - name: get caller identity 1
+        run: |
+          aws sts get-caller-identity
+
       - name: Update kube config
         run: aws eks update-kubeconfig --name safe-as-houses --region eu-west-2
 
