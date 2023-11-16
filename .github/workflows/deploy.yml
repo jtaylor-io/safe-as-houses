@@ -52,10 +52,11 @@ jobs:
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -t latest .
           docker push -a $REGISTRY/$REPOSITORY
 
-      - name: Configure Kubernetes client
-        uses: silverlyra/setup-aws-eks@v0.1
-        with:
-          cluster: safe-as-houses
+      - name: Update kube config
+        run: aws eks update-kubeconfig --name safe-as-houses --region eu-west-2
+      
+      - name: kubectl config get-contexts
+        run: kubectl config get-contexts
 
       - name: Deploy image to Amazon EKS
         run: |
