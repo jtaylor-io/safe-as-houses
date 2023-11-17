@@ -1,0 +1,124 @@
+name: CI/CD
+
+on: push
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: secret
+          POSTGRES_DB: safe_as_houses
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.20"
+
+      - name: Install golang-migrate
+        run: |
+          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
+          sudo mv migrate /usr/bin/migrate
+          which migrate
+
+      - name: DB Migrations
+        run: make migrateup
+
+      - name: Test
+        run: make test
+
+  build:
+    name: Build image
+    needs: test
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: "v1.28.3"
+        id: install
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::426038099359:role/my-github-actions-role
+          aws-region: eu-west-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Load secrets and save in app.env
+        # multi-line cmd
+        run: >
+          aws secretsmanager get-secret-value 
+          --secret-id safe-as-houses 
+          --query SecretString 
+          --out text 
+          | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' 
+          > app.env
+
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: safe-as-houses
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -t $REGISTRY/$REPOSITORY:latest .
+          docker push -a $REGISTRY/$REPOSITORY
+
+  deploy:
+    name: Deploy
+    if: github.ref == 'refs/head/main'
+    needs: [test, build]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::426038099359:role/my-github-actions-role
+          aws-region: eu-west-2
+
+      - name: Update kube config
+        run: aws eks update-kubeconfig --name safe-as-houses --region eu-west-2
+
+      - name: Deploy image to Amazon EKS
+        uses: azure/k8s-deploy@v4
+        with:
+          namespace: default
+          images: 426038099359.dkr.ecr.eu-west-2.amazonaws.com/safe-as-houses:${{ github.sha }}
+          # NOTE: The aws-auth.yaml needs to be applied by
+          #       the user setting up the cluster initially.
+          #       It sets up permissiosn for github user to login to EKS.
+          manifests: |
+            eks/aws-auth.yaml
+            eks/deployment.yaml
+            eks/service.yaml
+            eks/issuer.yaml
+            eks/ingress.yaml
