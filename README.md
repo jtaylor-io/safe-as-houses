@@ -1,2 +1,5 @@
 # safe-as-houses
-Banking app 
+
+Banking app
+
+## [Installation](./INSTALLATION.md)
