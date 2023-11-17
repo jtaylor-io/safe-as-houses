@@ -61,6 +61,10 @@ jobs:
 
       - name: Deploy image to Amazon EKS
         run: |
+          # NOTE: The aws-auth.yaml needs to be applied by
+          #       the user setting up the cluster initially.
+          #       It sets up permissiosn for github user to login to EKS.
+          kubectl apply -f eks/aws-auth.yaml
           kubectl apply -f eks/deployment.yaml
           kubectl apply -f eks/service.yaml
           kubectl apply -f eks/issuer.yaml
