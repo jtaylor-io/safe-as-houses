@@ -91,7 +91,7 @@ jobs:
 
   deploy:
     name: Deploy
-    if: github.ref == 'refs/head/main'
+    if: github.ref == 'refs/heads/main'
     needs: [test, build]
     runs-on: ubuntu-latest
     permissions:
