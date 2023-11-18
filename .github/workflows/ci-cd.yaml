@@ -54,12 +54,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Install kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: "v1.28.3"
-        id: install
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -102,6 +96,12 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: "v1.28.3"
+        id: install
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -112,16 +112,12 @@ jobs:
         run: aws eks update-kubeconfig --name safe-as-houses --region eu-west-2
 
       - name: Deploy image to Amazon EKS
-        uses: azure/k8s-deploy@v4
-        with:
-          namespace: default
-          images: 426038099359.dkr.ecr.eu-west-2.amazonaws.com/safe-as-houses:${{ github.sha }}
+        run: |
           # NOTE: The aws-auth.yaml needs to be applied by
           #       the user setting up the cluster initially.
           #       It sets up permissiosn for github user to login to EKS.
-          manifests: |
-            eks/aws-auth.yaml
-            eks/deployment.yaml
-            eks/service.yaml
-            eks/issuer.yaml
-            eks/ingress.yaml
+          kubectl apply -f eks/aws-auth.yaml
+          kubectl apply -f eks/deployment.yaml
+          kubectl apply -f eks/service.yaml
+          kubectl apply -f eks/issuer.yaml
+          kubectl apply -f eks/ingress.yaml
