@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -42,6 +43,10 @@ func (server *Server) setupRouter() {
 		v.RegisterValidation("currency", validCurrency)
 		v.RegisterValidation("positivedecimal", positiveDecimal)
 	}
+
+	router.GET("/ping", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{"message": "pong"})
+	})
 
 	router.POST("/users", server.createUser)
 	router.POST("/users/login", server.loginUser)
