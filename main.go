@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"database/sql"
+	"embed"
+	"io/fs"
 	"log"
 	"net"
 	"net/http"
@@ -56,6 +58,9 @@ func runGrpcServer(config util.Config, store db.Store) {
 	}
 }
 
+//go:embed doc/swagger/*
+var swaggerContent embed.FS
+
 func runGatewayServer(config util.Config, store db.Store) {
 	server, err := gapi.NewServer(config, store)
 	if err != nil {
@@ -81,7 +86,11 @@ func runGatewayServer(config util.Config, store db.Store) {
 	mux := http.NewServeMux()
 	mux.Handle("/", grpcMux)
 
-	fs := http.FileServer(http.Dir("./doc/swagger"))
+	swaggerSubDir, err := fs.Sub(swaggerContent, "doc/swagger")
+	if err != nil {
+		log.Fatal("cannot load swagger content:", err)
+	}
+	fs := http.FileServer(http.FS(swaggerSubDir))
 	mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
 
 	listener, err := net.Listen("tcp", config.HTTPServerAddress)
