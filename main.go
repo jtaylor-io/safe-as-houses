@@ -4,11 +4,15 @@ import (
 	"context"
 	"database/sql"
 	"embed"
+	"fmt"
 	"io/fs"
 	"log"
 	"net"
 	"net/http"
 
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/jtaylor-io/safe-as-houses/api"
 	db "github.com/jtaylor-io/safe-as-houses/db/sqlc"
@@ -31,9 +35,27 @@ func main() {
 		log.Fatal("cannot connect to db: ", err)
 	}
 
+	err = runMigrations(config.MigrationURL, config.DBSource)
+	if err != nil {
+		log.Fatal("could not run db migrations:", err)
+	}
+	log.Println("db migrations ran successfully")
+
 	store := db.NewStore(conn)
 	go runGatewayServer(config, store)
 	runGrpcServer(config, store)
+}
+
+func runMigrations(migrationUrl string, dbSource string) error {
+	m, err := migrate.New(migrationUrl, dbSource)
+	if err != nil {
+		return fmt.Errorf("cannot create new migration instance: %w", err)
+	}
+	err = m.Up()
+	if err != nil && err != migrate.ErrNoChange {
+		return fmt.Errorf("cannot run migrate up: %w", err)
+	}
+	return nil
 }
 
 func runGrpcServer(config util.Config, store db.Store) {
