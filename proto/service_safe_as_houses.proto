@@ -5,8 +5,26 @@ package pb;
 import "google/api/annotations.proto";
 import "rpc_create_user.proto";
 import "rpc_login_user.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "github.com/jtaylor-io/safe-as-houses/pb";
+
+// TOOD: not sure what is up with indentation here
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info : {title : "Safe As Houses API";
+version : "1.0";
+contact : {
+name:
+  "Safe As Houses API";
+url:
+  "https://safe-as-houses.jtaylor.io";
+email:
+  "safeashouses4thewin@gmail.com";
+};
+}
+;
+}
+;
 
 service SafeAsHouses {
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
