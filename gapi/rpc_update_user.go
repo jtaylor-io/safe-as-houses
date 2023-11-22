@@ -3,6 +3,7 @@ package gapi
 import (
 	"context"
 	"database/sql"
+	"time"
 
 	db "github.com/jtaylor-io/safe-as-houses/db/sqlc"
 	"github.com/jtaylor-io/safe-as-houses/pb"
@@ -43,6 +44,10 @@ func (server *Server) UpdateUser(
 		arg.HashedPassword = sql.NullString{
 			String: hashedPassword,
 			Valid:  true,
+		}
+		arg.PasswordChangedAt = sql.NullTime{
+			Time:  time.Now(),
+			Valid: true,
 		}
 	}
 
