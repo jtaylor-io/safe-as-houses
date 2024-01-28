@@ -87,7 +87,8 @@ jobs:
     name: Deploy
     # TODO: disabling deploy job as have deleted eks
     #       cluster to save money. orig value: 'refs/heads/main'
-    if: github.ref == ''
+    # if: github.ref == ''
+    if: github.ref == 'refs/heads/main'
     needs: [test, build]
     runs-on: ubuntu-latest
     permissions:
