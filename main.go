@@ -31,9 +31,12 @@ import (
 
 func main() {
 	config, err := util.LoadConfig(".")
+	config.MigrationURL = "file://db/migration"
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot load config file")
 	}
+
+	fmt.Println("config.MigrationURL", config.MigrationURL)
 	fmt.Println("config.Environment", config.Environment)
 	fmt.Println("config.DBDriver", config.DBDriver)
 	fmt.Println("config.RefreshTokenDuration", config.RefreshTokenDuration)
