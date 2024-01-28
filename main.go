@@ -34,6 +34,8 @@ func main() {
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot load config file")
 	}
+	fmt.Println("config.Environment", config.Environment)
+	fmt.Println("config.RefreshTokenDuration", config.RefreshTokenDuration)
 
 	if config.Environment == "development" {
 		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
