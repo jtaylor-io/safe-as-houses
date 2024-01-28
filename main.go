@@ -46,7 +46,7 @@ func main() {
 
 	err = runMigrations(config.MigrationURL, config.DBSource)
 	if err != nil {
-		log.Fatal().Err(err).Msg("could not run db migrations")
+		log.Fatal().Err(err).Msg("could not run db migrations: " + config.MigrationURL)
 	}
 	log.Info().Msg("db migrations ran successfully")
 
