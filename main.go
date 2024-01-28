@@ -35,6 +35,7 @@ func main() {
 		log.Fatal().Err(err).Msg("cannot load config file")
 	}
 	fmt.Println("config.Environment", config.Environment)
+	fmt.Println("config.DBDriver", config.DBDriver)
 	fmt.Println("config.RefreshTokenDuration", config.RefreshTokenDuration)
 
 	if config.Environment == "development" {
@@ -43,7 +44,7 @@ func main() {
 
 	conn, err := sql.Open(config.DBDriver, config.DBSource)
 	if err != nil {
-		log.Fatal().Err(err).Msg("cannot connect to db: ")
+		log.Fatal().Err(err).Msg("cannot connect to db")
 	}
 
 	err = runMigrations(config.MigrationURL, config.DBSource)
