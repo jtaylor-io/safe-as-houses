@@ -18,6 +18,7 @@ import (
 	"github.com/jtaylor-io/safe-as-houses/api"
 	db "github.com/jtaylor-io/safe-as-houses/db/sqlc"
 	"github.com/jtaylor-io/safe-as-houses/gapi"
+	"github.com/jtaylor-io/safe-as-houses/mail"
 	"github.com/jtaylor-io/safe-as-houses/pb"
 	"github.com/jtaylor-io/safe-as-houses/util"
 	"github.com/jtaylor-io/safe-as-houses/worker"
@@ -56,7 +57,7 @@ func main() {
 	}
 	taskDistributor := worker.NewRedisTaskDistributor(redisOpt)
 
-	go runTaskProcessor(redisOpt, store)
+	go runTaskProcessor(config, redisOpt, store)
 	go runGatewayServer(config, store, taskDistributor)
 	runGrpcServer(config, store, taskDistributor)
 }
@@ -73,8 +74,13 @@ func runMigrations(migrationUrl string, dbSource string) error {
 	return nil
 }
 
-func runTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store) {
-	taskProcessor := worker.NewRedisTaskProcessor(redisOpt, store)
+func runTaskProcessor(config util.Config, redisOpt asynq.RedisClientOpt, store db.Store) {
+	mailer := mail.NewGmailSender(
+		config.EmailSenderName,
+		config.EmailSenderAddress,
+		config.EmailSenderPassword,
+	)
+	taskProcessor := worker.NewRedisTaskProcessor(redisOpt, store, mailer)
 	log.Info().Msg("start task processor")
 	err := taskProcessor.Start()
 	if err != nil {
