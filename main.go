@@ -31,15 +31,9 @@ import (
 
 func main() {
 	config, err := util.LoadConfig(".")
-	config.MigrationURL = "file://db/migration"
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot load config file")
 	}
-
-	fmt.Println("config.MigrationURL", config.MigrationURL)
-	fmt.Println("config.Environment", config.Environment)
-	fmt.Println("config.DBDriver", config.DBDriver)
-	fmt.Println("config.RefreshTokenDuration", config.RefreshTokenDuration)
 
 	if config.Environment == "development" {
 		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
@@ -91,7 +85,7 @@ func runTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store) {
 func runGrpcServer(config util.Config, store db.Store, taskDistributor worker.TaskDistributor) {
 	server, err := gapi.NewServer(config, store, taskDistributor)
 	if err != nil {
-		log.Fatal().Err(err).Msg("cannot create server:")
+		log.Fatal().Err(err).Msg("cannot create server")
 	}
 
 	grpcLogger := grpc.UnaryInterceptor(gapi.GrpcLogger)
@@ -101,13 +95,13 @@ func runGrpcServer(config util.Config, store db.Store, taskDistributor worker.Ta
 
 	listener, err := net.Listen("tcp", config.GRPCServerAddress)
 	if err != nil {
-		log.Fatal().Err(err).Msg("cannot create listener:")
+		log.Fatal().Err(err).Msg("cannot create listener")
 	}
 
 	log.Info().Msgf("starting gRPC server on %s", listener.Addr().String())
 	err = grpcServer.Serve(listener)
 	if err != nil {
-		log.Fatal().Err(err).Msg("cannot start gRPC server:")
+		log.Fatal().Err(err).Msg("cannot start gRPC server")
 	}
 }
 
@@ -117,7 +111,7 @@ var swaggerContent embed.FS
 func runGatewayServer(config util.Config, store db.Store, taskDistributor worker.TaskDistributor) {
 	server, err := gapi.NewServer(config, store, taskDistributor)
 	if err != nil {
-		log.Fatal().Err(err).Msg("cannot create server:")
+		log.Fatal().Err(err).Msg("cannot create server")
 	}
 
 	jsonOptions := runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{
@@ -133,7 +127,7 @@ func runGatewayServer(config util.Config, store db.Store, taskDistributor worker
 	defer cancel()
 	err = pb.RegisterSafeAsHousesHandlerServer(ctx, grpcMux, server)
 	if err != nil {
-		log.Fatal().Err(err).Msg("cannot register gateway handler:")
+		log.Fatal().Err(err).Msg("cannot register gateway handler")
 	}
 
 	mux := http.NewServeMux()
@@ -141,33 +135,33 @@ func runGatewayServer(config util.Config, store db.Store, taskDistributor worker
 
 	swaggerSubDir, err := fs.Sub(swaggerContent, "doc/swagger")
 	if err != nil {
-		log.Fatal().Err(err).Msg("cannot load swagger content:")
+		log.Fatal().Err(err).Msg("cannot load swagger content")
 	}
 	fs := http.FileServer(http.FS(swaggerSubDir))
 	mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
 
 	listener, err := net.Listen("tcp", config.HTTPServerAddress)
 	if err != nil {
-		log.Fatal().Err(err).Msg("cannot create listener:")
+		log.Fatal().Err(err).Msg("cannot create listener")
 	}
 
 	log.Info().Msgf("starting HTTP gateway server on %s", listener.Addr().String())
 	handler := gapi.HttpLogger(mux)
 	err = http.Serve(listener, handler)
 	if err != nil {
-		log.Fatal().Err(err).Msg("cannot start HTTP gateway serverL:")
+		log.Fatal().Err(err).Msg("cannot start HTTP gateway server")
 	}
 }
 
 func runGinServer(config util.Config, store db.Store) {
 	server, err := api.NewServer(config, store)
 	if err != nil {
-		log.Fatal().Err(err).Msg("cannot create server:")
+		log.Fatal().Err(err).Msg("cannot create server")
 		return
 	}
 
 	err = server.Start(config.HTTPServerAddress)
 	if err != nil {
-		log.Fatal().Err(err).Msg("cannot start server:")
+		log.Fatal().Err(err).Msg("cannot start server")
 	}
 }

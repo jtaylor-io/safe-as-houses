@@ -10,7 +10,7 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "github.com/jtaylor-io/safe-as-houses/pb";
 
-// TOOD: not sure what is up with indentation here
+// TODO: not sure what is up with indentation here
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info : {title : "Safe As Houses API";
 version : "1.2";

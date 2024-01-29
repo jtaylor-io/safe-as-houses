@@ -28,6 +28,15 @@ type Config struct {
 func LoadConfig(path string) (Config, error) {
 	var config Config
 	var err error
+
+	viper.SetDefault("DB_DRIVER", "postgres")
+	viper.SetDefault("MIGRATION_URL", "file://db/migration")
+	viper.SetDefault("REDIS_ADDRESS", "0.0.0.0:6379")
+	viper.SetDefault("HTTP_SERVER_ADDRESS", "0.0.0.0:8080")
+	viper.SetDefault("GRPC_SERVER_ADDRESS", "0.0.0.0:9090")
+	viper.SetDefault("ACCESS_TOKEN_DURATION", "15m")
+	viper.SetDefault("REFRESH_TOKEN_DURATION", "24h")
+
 	viper.AddConfigPath(path)
 	viper.SetConfigName("app")
 	viper.SetConfigType("env")
