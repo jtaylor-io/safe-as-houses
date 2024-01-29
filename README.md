@@ -39,11 +39,11 @@ I am currently deploying service to AWS EKS via Github actions workflow.
 
 The service can be run locally either using
 
-- [Docker compose](https://docs.docker.com/compose/intro/features-uses/):
+- [Docker compose](https://docs.docker.com/compose/intro/features-uses/)
 
 ```
 # in project root directory run:
-$> docker compose up
+docker compose up
 ```
 
 <div><img src="./doc/images/docker-compose-1.png" alt="Docker Compose Output Screenshot" width="400"/></div>
