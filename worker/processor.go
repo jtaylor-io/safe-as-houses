@@ -5,6 +5,7 @@ import (
 
 	"github.com/hibiken/asynq"
 	db "github.com/jtaylor-io/safe-as-houses/db/sqlc"
+	"github.com/jtaylor-io/safe-as-houses/mail"
 	"github.com/redis/go-redis/v9"
 	"github.com/rs/zerolog/log"
 )
@@ -22,9 +23,14 @@ type TaskProcessor interface {
 type RedisTaskProcessor struct {
 	server *asynq.Server
 	store  db.Store
+	mailer mail.EmailSender
 }
 
-func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store) TaskProcessor {
+func NewRedisTaskProcessor(
+	redisOpt asynq.RedisClientOpt,
+	store db.Store,
+	mailer mail.EmailSender,
+) TaskProcessor {
 	logger := NewLogger()
 	redis.SetLogger(logger)
 	server := asynq.NewServer(
@@ -40,7 +46,7 @@ func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store) TaskPr
 						Err(err).
 						Str("type", task.Type()).
 						Bytes("payload", task.Payload()).
-						Msg("prosess task failed")
+						Msg("process task failed")
 				},
 			),
 			Logger: logger,
@@ -49,5 +55,6 @@ func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store) TaskPr
 	return &RedisTaskProcessor{
 		server,
 		store,
+		mailer,
 	}
 }
