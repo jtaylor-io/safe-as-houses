@@ -8,6 +8,8 @@ import (
 )
 
 func TestSendEmailWithEmail(t *testing.T) {
+	// TODO: currently removing the app password in app.env
+	// setup here: https://myaccount.google.com/apppasswords
 	if testing.Short() {
 		t.Skip()
 	}

@@ -61,7 +61,7 @@ func (sender *GmailSender) SendEmail(
 	}
 
 	smtpAuth := smtp.PlainAuth(
-		"",
+		"", // identity
 		sender.fromEmailAddress,
 		sender.fromEmailPassword,
 		smtpAuthAddress,
