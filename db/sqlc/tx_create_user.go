@@ -29,8 +29,7 @@ func (store *SQLStore) CreateUserTx(
 			return err
 		}
 
-		// TODO: reinstate once redis setup is sorted
-		return nil // arg.AfterCreate(result.User)
+		return arg.AfterCreate(result.User)
 	})
 
 	return result, err
