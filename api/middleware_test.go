@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jtaylor-io/safe-as-houses/token"
+	"github.com/jtaylor-io/safe-as-houses/util"
 	"github.com/stretchr/testify/require"
 )
 
@@ -18,9 +19,10 @@ func addAuthorization(
 	tokenMaker token.Maker,
 	authorizationType string,
 	username string,
+	role string,
 	duration time.Duration,
 ) {
-	token, payload, err := tokenMaker.CreateToken(username, duration)
+	token, payload, err := tokenMaker.CreateToken(username, role, duration)
 	require.NoError(t, err)
 	require.NotEmpty(t, payload)
 
@@ -43,6 +45,7 @@ func TestAuthMiddleware(t *testing.T) {
 					tokenMaker,
 					authorizationTypeBearer,
 					"user",
+					util.DepositorRole,
 					time.Minute,
 				)
 			},
@@ -67,6 +70,7 @@ func TestAuthMiddleware(t *testing.T) {
 					tokenMaker,
 					"unsupported",
 					"user",
+					util.DepositorRole,
 					time.Minute,
 				)
 			},
@@ -83,6 +87,7 @@ func TestAuthMiddleware(t *testing.T) {
 					tokenMaker,
 					"",
 					"user",
+					util.DepositorRole,
 					time.Minute,
 				)
 			},
@@ -99,6 +104,7 @@ func TestAuthMiddleware(t *testing.T) {
 					tokenMaker,
 					authorizationTypeBearer,
 					"user",
+					util.DepositorRole,
 					-time.Minute,
 				)
 			},

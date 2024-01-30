@@ -53,6 +53,7 @@ func TestCreateTransferAPI(t *testing.T) {
 					tokenMaker,
 					authorizationTypeBearer,
 					user1.Username,
+					user1.Role,
 					time.Minute,
 				)
 			},
@@ -95,6 +96,7 @@ func TestCreateTransferAPI(t *testing.T) {
 					tokenMaker,
 					authorizationTypeBearer,
 					user2.Username,
+					user2.Role,
 					time.Minute,
 				)
 			},
@@ -155,6 +157,7 @@ func TestCreateTransferAPI(t *testing.T) {
 					tokenMaker,
 					authorizationTypeBearer,
 					user1.Username,
+					user1.Role,
 					time.Minute,
 				)
 			},
@@ -185,6 +188,7 @@ func TestCreateTransferAPI(t *testing.T) {
 					tokenMaker,
 					authorizationTypeBearer,
 					user1.Username,
+					user1.Role,
 					time.Minute,
 				)
 			},
@@ -215,6 +219,7 @@ func TestCreateTransferAPI(t *testing.T) {
 					tokenMaker,
 					authorizationTypeBearer,
 					user1.Username,
+					user1.Role,
 					time.Minute,
 				)
 			},
@@ -245,6 +250,7 @@ func TestCreateTransferAPI(t *testing.T) {
 					tokenMaker,
 					authorizationTypeBearer,
 					user1.Username,
+					user1.Role,
 					time.Minute,
 				)
 			},
@@ -275,6 +281,7 @@ func TestCreateTransferAPI(t *testing.T) {
 					tokenMaker,
 					authorizationTypeBearer,
 					user1.Username,
+					user1.Role,
 					time.Minute,
 				)
 			},
@@ -306,6 +313,7 @@ func TestCreateTransferAPI(t *testing.T) {
 					tokenMaker,
 					authorizationTypeBearer,
 					user1.Username,
+					user1.Role,
 					time.Minute,
 				)
 			},
@@ -343,6 +351,7 @@ func TestCreateTransferAPI(t *testing.T) {
 					tokenMaker,
 					authorizationTypeBearer,
 					user1.Username,
+					user1.Role,
 					time.Minute,
 				)
 			},
@@ -379,6 +388,7 @@ func TestCreateTransferAPI(t *testing.T) {
 					tokenMaker,
 					authorizationTypeBearer,
 					user1.Username,
+					user1.Role,
 					time.Minute,
 				)
 			},
@@ -416,6 +426,7 @@ func TestCreateTransferAPI(t *testing.T) {
 					tokenMaker,
 					authorizationTypeBearer,
 					user1.Username,
+					user1.Role,
 					time.Minute,
 				)
 			},
@@ -454,6 +465,7 @@ func TestCreateTransferAPI(t *testing.T) {
 					tokenMaker,
 					authorizationTypeBearer,
 					user1.Username,
+					user1.Role,
 					time.Minute,
 				)
 			},
