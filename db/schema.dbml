@@ -9,7 +9,7 @@ Table users as U {
 }
 
 Table verify_emails {
-    id bigserial
+    id bigserial [pk]
     username varchar [ref: > U.username, not null]
     email varchar [not null]
     secret_code varchar [not null]

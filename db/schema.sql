@@ -1,6 +1,6 @@
 -- SQL dump generated using DBML (dbml-lang.org)
 -- Database: PostgreSQL
--- Generated at: 2024-01-29T21:02:57.126Z
+-- Generated at: 2024-01-30T19:53:54.302Z
 
 CREATE TABLE "users" (
   "username" varchar PRIMARY KEY,
@@ -13,7 +13,7 @@ CREATE TABLE "users" (
 );
 
 CREATE TABLE "verify_emails" (
-  "id" bigserial,
+  "id" bigserial PRIMARY KEY,
   "username" varchar NOT NULL,
   "email" varchar NOT NULL,
   "secret_code" varchar NOT NULL,
