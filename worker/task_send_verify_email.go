@@ -74,7 +74,7 @@ func (processor *RedisTaskProcessor) ProcessTaskSendVerifyEmail(
 	// TODO: temporarily hardcoding the verify url
 	verifyUrl := fmt.Sprintf(
 		"http://localhost:8080/v1/verify_email?email_id=%d&secret_code=%s",
-		verifyEmail.ID.Int64,
+		verifyEmail.ID,
 		verifyEmail.SecretCode,
 	)
 	to := []string{user.Email}
