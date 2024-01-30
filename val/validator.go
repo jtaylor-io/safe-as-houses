@@ -2,6 +2,7 @@ package val
 
 import (
 	"errors"
+	"fmt"
 	"net/mail"
 	"regexp"
 )
@@ -60,4 +61,15 @@ func ValidateEmail(value string) error {
 		return err
 	}
 	return nil
+}
+
+func ValidateEmailId(value int64) error {
+	if value <= 0 {
+		return fmt.Errorf("email id must be a positive integer")
+	}
+	return nil
+}
+
+func ValidateSecretCode(value string) error {
+	return ValidateString(value, 32, 128)
 }
