@@ -7,7 +7,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createVerifyEmail = `-- name: CreateVerifyEmail :one
@@ -54,8 +53,8 @@ RETURNING id, username, email, secret_code, is_used, created_at, expired_at
 `
 
 type UpdateVerifyEmailParams struct {
-	ID         sql.NullInt64 `json:"id"`
-	SecretCode string        `json:"secret_code"`
+	ID         int64  `json:"id"`
+	SecretCode string `json:"secret_code"`
 }
 
 func (q *Queries) UpdateVerifyEmail(ctx context.Context, arg UpdateVerifyEmailParams) (VerifyEmail, error) {

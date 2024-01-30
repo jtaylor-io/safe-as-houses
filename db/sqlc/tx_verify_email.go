@@ -27,10 +27,7 @@ func (store *SQLStore) VerifyEmailTx(
 	err := store.execTx(ctx, func(q *Queries) error {
 		var err error
 		result.VerifyEmail, err = q.UpdateVerifyEmail(ctx, UpdateVerifyEmailParams{
-			ID: sql.NullInt64{
-				Int64: arg.EmailId,
-				Valid: arg.EmailId != 0,
-			},
+			ID:         arg.EmailId,
 			SecretCode: arg.SecretCode,
 		})
 		if err != nil {

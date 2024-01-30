@@ -5,7 +5,6 @@
 package db
 
 import (
-	"database/sql"
 	"time"
 
 	"github.com/google/uuid"
@@ -60,11 +59,11 @@ type User struct {
 }
 
 type VerifyEmail struct {
-	ID         sql.NullInt64 `json:"id"`
-	Username   string        `json:"username"`
-	Email      string        `json:"email"`
-	SecretCode string        `json:"secret_code"`
-	IsUsed     bool          `json:"is_used"`
-	CreatedAt  time.Time     `json:"created_at"`
-	ExpiredAt  time.Time     `json:"expired_at"`
+	ID         int64     `json:"id"`
+	Username   string    `json:"username"`
+	Email      string    `json:"email"`
+	SecretCode string    `json:"secret_code"`
+	IsUsed     bool      `json:"is_used"`
+	CreatedAt  time.Time `json:"created_at"`
+	ExpiredAt  time.Time `json:"expired_at"`
 }
