@@ -1,4 +1,5 @@
 DB_URL=postgresql://root:secret@localhost:5432/safe_as_houses?sslmode=disable
+
 postgres: 
 	docker run --name postgres15 --network bank-network -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:15-alpine
 
