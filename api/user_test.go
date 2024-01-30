@@ -16,7 +16,6 @@ import (
 	mockdb "github.com/jtaylor-io/safe-as-houses/db/mock"
 	db "github.com/jtaylor-io/safe-as-houses/db/sqlc"
 	"github.com/jtaylor-io/safe-as-houses/util"
-	"github.com/lib/pq"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
@@ -195,7 +194,7 @@ func TestCreateUserAPI(t *testing.T) {
 				store.EXPECT().
 					CreateUser(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(db.User{}, &pq.Error{Code: "23505"})
+					Return(db.User{}, db.ErrUniqueViolation)
 			},
 
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
@@ -303,7 +302,7 @@ func TestLoginUserAPI(t *testing.T) {
 				store.EXPECT().
 					GetUser(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(db.User{}, sql.ErrNoRows)
+					Return(db.User{}, db.ErrRecordNotFound)
 			},
 
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
