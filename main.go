@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"embed"
 	"fmt"
 	"io/fs"
@@ -15,6 +14,8 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/hibiken/asynq"
+	_ "github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jtaylor-io/safe-as-houses/api"
 	db "github.com/jtaylor-io/safe-as-houses/db/sqlc"
 	"github.com/jtaylor-io/safe-as-houses/gapi"
@@ -22,7 +23,6 @@ import (
 	"github.com/jtaylor-io/safe-as-houses/pb"
 	"github.com/jtaylor-io/safe-as-houses/util"
 	"github.com/jtaylor-io/safe-as-houses/worker"
-	_ "github.com/lib/pq"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
@@ -40,7 +40,7 @@ func main() {
 		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	}
 
-	conn, err := sql.Open(config.DBDriver, config.DBSource)
+	connPool, err := pgxpool.New(context.Background(), config.DBSource)
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot connect to db")
 	}
@@ -51,7 +51,7 @@ func main() {
 	}
 	log.Info().Msg("db migrations ran successfully")
 
-	store := db.NewStore(conn)
+	store := db.NewStore(connPool)
 	redisOpt := asynq.RedisClientOpt{
 		Addr: config.RedisAddress,
 	}

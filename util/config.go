@@ -10,7 +10,6 @@ import (
 // Values are sourced by viper from config file or environment variables
 type Config struct {
 	Environment          string        `mapstructure:"ENVIRONMENT"`
-	DBDriver             string        `mapstructure:"DB_DRIVER"`
 	DBSource             string        `mapstructure:"DB_SOURCE"`
 	MigrationURL         string        `mapstructure:"MIGRATION_URL"`
 	HTTPServerAddress    string        `mapstructure:"HTTP_SERVER_ADDRESS"`
@@ -29,7 +28,6 @@ func LoadConfig(path string) (Config, error) {
 	var config Config
 	var err error
 
-	viper.SetDefault("DB_DRIVER", "postgres")
 	viper.SetDefault("MIGRATION_URL", "file://db/migration")
 	viper.SetDefault("REDIS_ADDRESS", "0.0.0.0:6379")
 	viper.SetDefault("HTTP_SERVER_ADDRESS", "0.0.0.0:8080")
