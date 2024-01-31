@@ -1,20 +1,15 @@
 apiVersion: networking.k8s.io/v1
-kind: IngressClass
-metadata:
-  name: nginx
-spec:
-  controller: k8s.io/ingress-nginx
----
-apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: safe-as-houses-ingress
+  name: safe-as-houses-ingress-grpc
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
 spec:
   ingressClassName: nginx
   rules:
-    - host: "safe-as-houses.jtaylor.io"
+    - host: "gapi.safe-as-houses.jtaylor.io"
       http:
         paths:
           - pathType: Prefix
@@ -23,8 +18,8 @@ spec:
               service:
                 name: safe-as-houses-api-service
                 port:
-                  number: 80
+                  number: 90
   tls:
     - hosts:
-        - safe-as-houses.jtaylor.io
-      secretName: safe-as-houses-api-cert
+        - gapi.safe-as-houses.jtaylor.io
+      secretName: safe-as-houses-gapi-cert

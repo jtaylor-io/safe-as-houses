@@ -10,6 +10,10 @@ Will need to be translated into automated setup using Terraform, etc
 aws eks update-kubeconfig --name safe-as-houses --region eu-west-2
 ```
 
+```
+kubectl config use-context <arn of eks cluster>
+```
+
 ## add github role to aws-auth config map
 
 ```
