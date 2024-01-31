@@ -18,7 +18,7 @@ This is a work in progress 🏗️ and as such could be in an 'interim state' wi
 
 I am currently deploying service to AWS EKS via Github actions workflow.
 
-- api swagger docs can be found [here](https://safe-as-houses.jtaylor.io/swagger)
+- api swagger docs can be found [here](https://api.safe-as-houses.jtaylor.io/swagger)
 
 ## Local Development
 

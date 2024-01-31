@@ -73,7 +73,7 @@ func (processor *RedisTaskProcessor) ProcessTaskSendVerifyEmail(
 	subject := "Welcome to Safe As Houses"
 	// TODO: temporarily hardcoding the verify url
 	verifyUrl := fmt.Sprintf(
-		"http://localhost:8080/v1/verify_email?email_id=%d&secret_code=%s",
+		"https://api.safe-as-houses.jtaylor.io/v1/verify_email?email_id=%d&secret_code=%s",
 		verifyEmail.ID,
 		verifyEmail.SecretCode,
 	)
