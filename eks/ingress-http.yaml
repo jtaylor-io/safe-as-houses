@@ -7,7 +7,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: "safe-as-houses.jtaylor.io"
+    - host: "api.safe-as-houses.jtaylor.io"
       http:
         paths:
           - pathType: Prefix
@@ -19,5 +19,5 @@ spec:
                   number: 80
   tls:
     - hosts:
-        - safe-as-houses.jtaylor.io
+        - api.safe-as-houses.jtaylor.io
       secretName: safe-as-houses-api-cert
