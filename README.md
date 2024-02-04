@@ -16,9 +16,13 @@ This is a work in progress 🏗️ and as such could be in an 'interim state' wi
 
 ## Deployment
 
-I am currently deploying service to AWS EKS via Github actions workflow.
+~~I am currently deploying service to AWS EKS via Github actions workflow.~~
 
-- api swagger docs can be found [here](https://api.safe-as-houses.jtaylor.io/swagger)
+~~api swagger docs can be found~~ [~~here~~](https://api.safe-as-houses.jtaylor.io/swagger)
+
+I have deleted the AWS infrastructure to save money 🏦.
+An EKS cluster is a solid choice IMHO for a production setup but the daily cost of just running this demo isn't worth it 💸.
+When I get a chance, I will get it deployed onto a cheaper setup for demo 👍.
 
 ## Local Development
 
